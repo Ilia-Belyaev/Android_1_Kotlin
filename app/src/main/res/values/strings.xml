@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">First_Project_on_Kotlin</string>
+    <string name="data_class">data_class_info</string>
+    <string name="empty_button">empty_button</string>
+    <string name="copy_note">copy note</string>
+    <string name="print_array">print array</string>
 </resources>
