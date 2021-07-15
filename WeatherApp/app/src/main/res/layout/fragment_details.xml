@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fragmentBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainView"
@@ -11,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/your_location"
+            android:id="@+id/city_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/name_this_town"
@@ -20,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/Kovrov" />
+            tools:text="@string/Moscow" />
 
         <TextView
             android:id="@+id/coordinates_town"
@@ -29,11 +30,11 @@
             android:layout_marginTop="@dimen/coordinates_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/your_location"
-            tools:text="Широта/Долгота: 56.3572, 41.3192" />
+            app:layout_constraintTop_toBottomOf="@+id/city_name"
+            tools:text="@string/coordinates" />
 
         <TextView
-            android:id="@+id/temperatureLabel"
+            android:id="@+id/temperature_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_for_all"
@@ -51,11 +52,11 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temperatureLabel"
+            app:layout_constraintTop_toBottomOf="@+id/temperature_label"
             tools:text="+25" />
 
         <TextView
-            android:id="@+id/feelsLikeLabel"
+            android:id="@+id/feels_like_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_for_all"
@@ -65,7 +66,7 @@
             app:layout_constraintTop_toBottomOf="@+id/temperature_value" />
 
         <TextView
-            android:id="@+id/feelsLikeValue"
+            android:id="@+id/feels_like_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_for_all"
@@ -73,7 +74,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/feelsLikeLabel"
+            app:layout_constraintTop_toBottomOf="@+id/feels_like_label"
             tools:text="-23" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
