@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="temperature">Температура</string>
+    <string name="feels_like_as">Ощущается как:</string>
+    <string name="error">Ошибка!</string>
+    <string name="success">Удачно!</string>
+    <string name="reload">Перезагрузить</string>
+    <string name="coordinates_town">lt/ln: %s, %s"</string>
+    <string name="Moscow">Москва</string>
+    <string name="coordinates">lt/ln: 55.755826, 37.617299900000035</string>
+</resources>

@@ -2,28 +2,35 @@ package com.example.weatherapp.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weatherapp.model.Repo
+import com.example.weatherapp.model.RepoImpl
+import com.example.weatherapp.model.Weather
 import java.lang.Thread.sleep
 
 class MainViewModel(
-    private val liveDataToObserve: MutableLiveData<Any> =
-        MutableLiveData()
-) :
-    ViewModel() {
-    fun liveData() = liveDataToObserve
+    private val liveDataToObserve: MutableLiveData<AppState> =
+        MutableLiveData(),
+    private val repositoryImpl: Repo = RepoImpl()
 
-    fun weather() = getDataFromLocalSource()
+) : ViewModel() {
+    fun getLiveData() = liveDataToObserve
+    fun getWeatherFromLocalSourceRus() = getDataFromLocalSource(isRussian=true)
 
-    private fun getDataFromLocalSource() {
+    fun getWeatherFromLocalSourceWorld() = getDataFromLocalSource(isRussian = false)
+    fun getWeatherFromRemoteSource() = getDataFromLocalSource(isRussian = true)
+
+    private fun getDataFromLocalSource(isRussian:Boolean) {
         liveDataToObserve.value = AppState.Loading
         Thread {
-            sleep(100)
-            //сохраняем данные в LiveData
-            liveDataToObserve.postValue(AppState.Success(Any()))
+            sleep(1000)
+            liveDataToObserve.postValue(AppState.Success(
+                if (isRussian) repositoryImpl.getWeatherFromLocalStorageRus()
+                else repositoryImpl.getWeatherFromLocalStorageWorld()))
         }.start()
     }
 }
 sealed class AppState {
-    data class Success(val weatherData: Any) : AppState()
+    data class Success(val weatherData: List<Weather>) : AppState()
     data class Error(val error: Throwable) : AppState()
     object Loading : AppState()
 }
