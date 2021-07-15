@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">WeatherApp</string>
-    <string name="Kovrov">Ковров</string>
-    <string name="temperature">Температура</string>
-    <string name="feels_like_as">Ощущается как:</string>
-</resources>
