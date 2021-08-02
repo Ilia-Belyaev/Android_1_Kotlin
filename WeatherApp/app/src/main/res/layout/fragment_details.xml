@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerIcon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/town_header_height"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/city_name"
             android:layout_width="wrap_content"
@@ -21,6 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerIcon"
             tools:text="@string/Moscow" />
 
         <TextView
@@ -33,6 +43,16 @@
             app:layout_constraintTop_toBottomOf="@+id/city_name"
             tools:text="@string/coordinates" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/weatherIcon"
+            android:layout_width="@dimen/weather_icon_width"
+            android:layout_height="@dimen/weather_icon_height"
+            android:layout_marginTop="@dimen/margin_15_dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/coordinates_town"
+            tools:srcCompat="@drawable/ic_bkn_d" />
+
         <TextView
             android:id="@+id/weatherCondition"
             android:layout_width="wrap_content"
@@ -42,7 +62,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/coordinates_town"
+            app:layout_constraintTop_toBottomOf="@+id/weatherIcon"
             tools:text="Облачно" />
 
 
