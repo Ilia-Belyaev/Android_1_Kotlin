@@ -7,7 +7,9 @@ import kotlinx.parcelize.Parcelize
 data class Weather(
     val city: City = getDefaultCity(),
     val temperature: Int = 0,
-    val feelsLike: Int = 0
+    val feelsLike: Int = 0,
+    val condition: String = "sunny",
+    val icon: String? = "bkn_n"
 ) : Parcelable
 
 fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)
@@ -37,4 +39,15 @@ fun getRussianCities() = listOf(
     Weather(City("Ростов-на-Дону", 47.2357137, 39.701505), 17, 18),
     Weather(City("Уфа", 54.7387621, 55.972055400000045), 19, 20)
 )
+fun convertDtoToModel(weatherDTO: WeatherDTO): List<Weather> {
+    val fact: FactDTO = weatherDTO.factInfo!!
+    return listOf(
+        Weather(
+            getDefaultCity(), fact.temperature!!, fact.feels_like!!,
+            fact.condition!!, fact.icon
+        )
+    )
+
+}
+
 
