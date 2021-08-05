@@ -4,9 +4,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.example.weatherapp.databinding.MainActivityBinding
+import com.example.weatherapp.model.HistoryFragment
 import com.example.weatherapp.threads.MainBroadcastReceiver
-import com.example.weatherapp.ui.main.DetailsFragment
 import com.example.weatherapp.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +26,28 @@ class MainActivity : AppCompatActivity() {
         }
         registerReceiver(receiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_screen_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_history -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, HistoryFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 
     override fun onDestroy() {
         //отписываемся от сообщения перехода в режим самолета

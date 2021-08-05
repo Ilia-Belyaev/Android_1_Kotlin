@@ -17,4 +17,7 @@
     <dimen name="weather_icon_width">150dp</dimen>
     <dimen name="weather_icon_height">150dp</dimen>
     <dimen name="weather_icon_margin">110dp</dimen>
+    <dimen name="margin_fragment_main_recycler_item_db">5dp</dimen>
+    <dimen name="margin_minimum">1dp</dimen>
+
 </resources>

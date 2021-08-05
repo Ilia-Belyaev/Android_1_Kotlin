@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,10 @@ import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.model.Weather
 import com.google.android.material.snackbar.Snackbar
 
-class MainFragment : Fragment() {
+private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
 
+class MainFragment : Fragment() {
+    private var isDataSetWorld: Boolean = false
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
@@ -44,21 +47,43 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-        //viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        viewModel.getWeatherFromLocalSourceRus()
+        showListOfTowns()
     }
 
-    private fun changeWeatherDataSet() =
-        if (isDataSetRus) {
-            viewModel.getWeatherFromLocalSourceWorld()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
-        } else {
+    private fun changeWeatherDataSet() {
+        if (isDataSetWorld) {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
-        }.also { isDataSetRus = !isDataSetRus }
+        } else {
+            viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        }
+        isDataSetWorld = !isDataSetWorld
+
+        saveListOfTowns(isDataSetWorld)
+    }
+
+    private fun saveListOfTowns(isDataSetWorld: Boolean) {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, isDataSetWorld)
+                apply()
+            }
+        }
+    }
 
 
+
+    private fun showListOfTowns() {
+        activity?.let {
+            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY, false)) {
+                changeWeatherDataSet()
+            } else {
+                viewModel.getWeatherFromLocalSourceRus()
+            }
+        }
+    }
 
 
     private fun renderData(appState: AppState) {
@@ -80,6 +105,7 @@ class MainFragment : Fragment() {
             }
         }
     }
+
     private fun View.showSnackBar(
         text: String,
         actionText: String,
@@ -88,6 +114,7 @@ class MainFragment : Fragment() {
     ) {
         Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
+
     companion object {
         fun newInstance() =
             MainFragment()

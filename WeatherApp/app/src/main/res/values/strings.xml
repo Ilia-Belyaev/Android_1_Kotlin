@@ -8,4 +8,5 @@
     <string name="coordinates_town">lt/ln: %s, %s"</string>
     <string name="Moscow">Москва</string>
     <string name="coordinates">lt/ln: 55.755826, 37.617299900000035</string>
+    <string name="menu_title_history">history</string>
 </resources>
