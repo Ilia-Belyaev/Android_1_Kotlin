@@ -2,6 +2,7 @@ package com.example.weatherapp.model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weatherapp.app.App.Companion.getHistoryDao
 import com.example.weatherapp.ui.main.ScreenState
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,31 +14,29 @@ private const val REQUEST_ERROR = "Ошибка запроса на сервер
 private const val CORRUPTED_DATA = "Неполные данные"
 
 class DetailsViewModel(
-    //создаём LiveData для передачи данных
     val detailsLiveData: MutableLiveData<ScreenState> = MutableLiveData(),
-    //создаем репозиторий для получения данных
-    private val detailsRepositoryImpl: DetailsRepository =
-        DetailsRepositoryImpl(RemoteDataSource())
+    private val detailsRepository: DetailsRepository =
+        DetailsRepositoryImpl(RemoteDataSource()),
+    private val historyRepository: LocalRepository =
+        LocalRepositoryImpl(getHistoryDao())
 ) : ViewModel() {
-
-    //метод осуществляет запрос на сервер через репозиторий
     fun requestWeatherFromRemoteSource(lat: Double, lon: Double) {
         detailsLiveData.value = ScreenState.Loading
-        detailsRepositoryImpl.getWeatherDetailsFromServer(lat, lon, callBack)
+        detailsRepository.getWeatherDetailsFromServer(lat, lon, callBack)
     }
 
-    //здесь обрабатывается полученный ответ от сервера и принимается решение о состоянии экрана
-    private val callBack = object : retrofit2.Callback<WeatherDTO> {
+    fun saveCityToDB(weather: Weather) {
+        historyRepository.saveEntity(weather)
+    }
+
+    private val callBack = object : Callback<WeatherDTO> {
         @Throws(IOException::class)
-        // Вызывается, если ответ от сервера пришёл
         override fun onResponse(
-            call: retrofit2.Call<WeatherDTO>, response:
-            retrofit2.Response<WeatherDTO>
+            call: Call<WeatherDTO>, response:
+            Response<WeatherDTO>
         ) {
             val serverResponse: WeatherDTO? = response.body()
             detailsLiveData.postValue(
-                // Синхронизируем поток с потоком UI
-                //  если ответ удачный от 200 до 300 не включая
                 if (response.isSuccessful && serverResponse != null) {
                     checkResponse(serverResponse)
                 } else {
@@ -46,8 +45,7 @@ class DetailsViewModel(
             )
         }
 
-        // Вызывается при сбое в процессе запроса на сервер
-        override fun onFailure(call: retrofit2.Call<WeatherDTO>, t: Throwable) {
+        override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
             detailsLiveData.postValue(
                 ScreenState.Error(
                     Throwable(
@@ -57,7 +55,6 @@ class DetailsViewModel(
             )
         }
 
-        //проверяем ответ
         private fun checkResponse(serverResponse: WeatherDTO): ScreenState {
             val fact = serverResponse.factInfo
             return if (fact?.temperature == null || fact.feels_like == null ||

@@ -13,17 +13,17 @@ import com.example.weatherapp.databinding.FragmentDetailsBinding
 import com.example.weatherapp.model.Weather
 import com.example.weatherapp.model.DetailsViewModel
 import com.example.weatherapp.R
+import com.example.weatherapp.model.City
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
-//Здесь создаётся viewModel и подписка на неё
+
 class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
-    //WeatherBundle мы получим во время создания фрагмента
-    //и воспользуемся координатами для составления запроса на сервер
+
     private lateinit var weatherBundle: Weather
     private val viewModel: DetailsViewModel by lazy {
         ViewModelProvider(this).get(DetailsViewModel::class.java)
@@ -42,14 +42,11 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
         viewModel.detailsLiveData.observe(viewLifecycleOwner) { renderData(it) }
-        //получаем данные из удаленного источника
         viewModel.requestWeatherFromRemoteSource(weatherBundle.city.lat, weatherBundle.city.lon)
     }
 
-    //обрабатываем состояние приложения и обеспечиваем корректное отображение на экране
     private fun renderData(appState: ScreenState) {
-        //binding.viewDetailsFragment.visibility = View.VISIBLE
-        //binding.loadingLayout.visibility = View.GONE
+
         when (appState) {
             is ScreenState.Success -> {
                 binding.mainView.visibility = View.VISIBLE
@@ -76,7 +73,7 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    // Создадим extension-функцию для Snackbar (при ошибке приложения)
+
     private fun View.showSnackBarDetail(
         text: String,
         actionText: String,
@@ -86,9 +83,10 @@ class DetailsFragment : Fragment() {
         Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
-    //отображвем данные
+
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
+        saveCity(city, weather)
         binding.cityName.text = city.city
         binding.coordinatesTown.text = String.format(
             getString(R.string.coordinates_town),
@@ -104,7 +102,7 @@ class DetailsFragment : Fragment() {
             .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
             .into(binding.headerIcon)
 
-        // загружаем тучку и солнышко
+
         weather.icon?.let {
             GlideToVectorYou.justLoadImage(
                 activity,
@@ -113,6 +111,20 @@ class DetailsFragment : Fragment() {
             )
         }
     }
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.feelsLike,
+                weather.condition
+            )
+        )
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -120,7 +132,6 @@ class DetailsFragment : Fragment() {
     }
 
     companion object {
-        //наш ключ-константа,по которому будем находить бандл
         const val BUNDLE_EXTRA = "weather"
         fun newInstance(bundle: Bundle): DetailsFragment {
             val fragment = DetailsFragment()
